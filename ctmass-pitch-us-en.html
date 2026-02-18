@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTMASS Platform — Analysis & Financial Model (US Market, February 2026)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+        .section { max-width: 1200px; margin: 0 auto; padding: 3rem 1rem; }
+        h1, h2 { color: #38bdf8; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; border: 1px solid #334155; text-align: left; }
+        th { background: #1e293b; }
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
+        .diagram-card {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .diagram-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        /* Modal styles */
+        #modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        #modal img {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+        #modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #modal-close:hover {
+            background: #ef4444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="section">
+    <h1 class="text-5xl font-bold mb-2">CTMASS Platform</h1>
+    <p class="text-xl mb-8">Two-sided marketplace for home services (Homeowner ↔ Specialist) in the United States</p>
+    <p class="mb-12">Architecture analysis (C4), Epic-Story Map, Cost Breakdown, Team Structure, Risk Matrix, ROI Projection (US market, February 2026)</p>
+
+    <h2 class="text-4xl font-bold mt-16 mb-10">C4 Architecture Diagrams</h2>
+    <p class="text-slate-400 mb-8 text-center">Click on any diagram to view it full-screen</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Context -->
+        <div class="diagram-card bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-700 hover:border-emerald-500/50 transition-all" onclick="openModal('https://kroki.io/plantuml/svg/eNp1VU1v5DYMvc-vYHPpDOCNLz0VCLDTJJukzWyMtYOgp4Fs0x41tuSV5JlMf31JyV8JGiCALIZ8JB8fNV-tE8b1bbP6Raqi6UuEg3Od_T2OjThd1tId-ry3aAqtHCp3Weg27hqhOOaLdWUj8_j6ty8Jm553j3ErrENDpv01R7y5y47RV7_C1dUVkK2SdW-Ek1qxZfW4_fvpOdtnT8n-5unl-3ozWl4esvv94-3d7fcbMq6cdA1Ceib0FgZoKKWojWih0gaus902TYEKcXRtx4wJGquVsD5ZuKwPukV9UmgiuLgfvy_okhjdoXFn8BZotH6VqvbwP3vRyEpiCbbDQtLFOnuxGSFnI8Gk04VBuVgjCkcg9NcZXaG11L5oQFcVGs5ABB9lgQtAUbZSUfSWT0IiynSocWgQsO0afUaEVihRe5TAjlAl8MgWaHWPvrI7PhnlWYneHbSR_1JHJ8ytdAhHSQdl2YzkDXQzdeFzXTgasOWu3tPNmDthXtGROAr0lFVSlVwW13OQoc-Zu4ip-AcLF-rHltQVeV-SWNsrWXiRzMXcvpGwmLVQil2Utaf_rStpMBcWqZJvwyes77SuG9xweVtqmHIMuBHcCCeCE7tbahw3EaR0UjUR3GvrqOQIvvWq4Aimc5GORiI7Tpb6Dz8aceYuuLGCZ6zq9yFCktNTh2r7ANvkwRf1AOJIhRiokSQX9iKQ4PcNCoMjDwskd5KN1BSf-Q9GSncpKO1Io6HBD-W2ovMj6iANWhu5icmW67dNmGDXjROrUTc6QC3luYDEVsiGom75_DOFGNJdllyMFiixkUc05_dRtWAd-tSwpXGeaSKWg14wp8SDYRIx5HgQR0ly4iV6DZwOiviBTWj1ILsgB7KMWp-U-ofRJ4sWuj5vZAFSsV5HTjlg8RzM8mbaOSholEwWhSkOZHqn4Vmrnh2GWz4FE97Oa9zjVbIh2eSytEDUzgnyRtcjxrD9U_j4CtA2QzesXAStLlkyBDuohanh8DFusRKsa3IsSWu0ZfMqkM2_FRGYXlmoJrHz25hlSRpPy5Te_DWUN-JPO5AExXODYQfm-A8hfgfugtbJXbZMy2fOk8xTVEQXSfwzzyDvH_iTh2_5akcVc8ufhY0SDvj-ZsMyZUn8fwFevcF71ioeP3a8-kou9Lv3H7PCg0o')">
+            <div class="p-4 text-center">
+                <div class="text-emerald-400 font-medium mb-2 flex items-center justify-center gap-2">
+                    <span class="text-xl">🌐</span> CONTEXT DIAGRAM
+                </div>
+                <img src="https://kroki.io/plantuml/svg/eNp1VU1v5DYMvc-vYHPpDOCNLz0VCLDTJJukzWyMtYOgp4Fs0x41tuSV5JlMf31JyV8JGiCALIZ8JB8fNV-tE8b1bbP6Raqi6UuEg3Od_T2OjThd1tId-ry3aAqtHCp3Weg27hqhOOaLdWUj8_j6ty8Jm553j3ErrENDpv01R7y5y47RV7_C1dUVkK2SdW-Ek1qxZfW4_fvpOdtnT8n-5unl-3ozWl4esvv94-3d7fcbMq6cdA1Ceib0FgZoKKWojWih0gaus902TYEKcXRtx4wJGquVsD5ZuKwPukV9UmgiuLgfvy_okhjdoXFn8BZotH6VqvbwP3vRyEpiCbbDQtLFOnuxGSFnI8Gk04VBuVgjCkcg9NcZXaG11L5oQFcVGs5ABB9lgQtAUbZSUfSWT0IiynSocWgQsO0afUaEVihRe5TAjlAl8MgWaHWPvrI7PhnlWYneHbSR_1JHJ8ytdAhHSQdl2YzkDXQzdeFzXTgasOWu3tPNmDthXtGROAr0lFVSlVwW13OQoc-Zu4ip-AcLF-rHltQVeV-SWNsrWXiRzMXcvpGwmLVQil2Utaf_rStpMBcWqZJvwyes77SuG9xweVtqmHIMuBHcCCeCE7tbahw3EaR0UjUR3GvrqOQIvvWq4Aimc5GORiI7Tpb6Dz8aceYuuLGCZ6zq9yFCktNTh2r7ANvkwRf1AOJIhRiokSQX9iKQ4PcNCoMjDwskd5KN1BSf-Q9GSncpKO1Io6HBD-W2ovMj6iANWhu5icmW67dNmGDXjROrUTc6QC3luYDEVsiGom75_DOFGNJdllyMFiixkUc05_dRtWAd-tSwpXGeaSKWg14wp8SDYRIx5HgQR0ly4iV6DZwOiviBTWj1ILsgB7KMWp-U-ofRJ4sWuj5vZAFSsV5HTjlg8RzM8mbaOSholEwWhSkOZHqn4Vmrnh2GWz4FE97Oa9zjVbIh2eSytEDUzgnyRtcjxrD9U_j4CtA2QzesXAStLlkyBDuohanh8DFusRKsa3IsSWu0ZfMqkM2_FRGYXlmoJrHz25hlSRpPy5Te_DWUN-JPO5AExXODYQfm-A8hfgfugtbJXbZMy2fOk8xTVEQXSfwzzyDvH_iTh2_5akcVc8ufhY0SDvj-ZsMyZUn8fwFevcF71ioeP3a8-kou9Lv3H7PCg0o"
+                     alt="Context Diagram" class="w-full h-auto rounded-t-xl">
+                <p class="text-sm text-slate-400 mt-3">High-level overview: Users, CTMASS Platform, external systems</p>
+            </div>
+        </div>
+
+        <!-- Container -->
+        <div class="diagram-card bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-700 hover:border-emerald-500/50 transition-all" onclick="openModal('https://kroki.io/plantuml/svg/eNqNVk1v4zYQvedXTHNpAiT2pacAAdabZJO0TuJdORv0ZFASLTMriSpJ2esW_e99Q-ozG2MbBBA15Jt5M5x58gfrhHF1kR_9osokr1NJG-cqezGdGrGbZMpt6ri20iS6dLJ0k0QX0yoXJWPOrUtzFU-vfjtfsOn5YT4thHXSwLS6AkKoUppJxf6PfqXLy0uCda2y2gindMmWo_nsz6fn5Wr5tFhdP708npy2lpf75d1qfnN783gN45FTLpfUeaVUicyIgtba0NXyYRZFBBYOr0UbbCGN1aWwPk54OdnoQuodHJzR8V27PsbLwuhKGrcnb6Fc62-qzLz7v2qRq7WSKdlKJgov1tnj09Zlb4SbqHthp0zXiMTBCf4ro9fSWmQuctLrtTQcAdXdqkQOHIq0UCXQM37CE6qlA8cmQZJFleu9lFSIUmTeyx6FL0iUKfF9DbxltfTMbvnJXp5LUbuNNupvZLSTsVVO0lbhgSinbfGi4PCjrstUmL2vYbCtWttJ4nDflvMcX8DxKf1zRPjrrusEcVaiqnD2RcY0q6pcJb4JmNEXiRrRlL7WcvJq2RIhp1yeVyKTJPrDoVhIV-S5z5MU-tKsBepHoYN5t6pjIIgTO6NU2E2shUlBlMvjq0uVKGU-oTuNjFKC50_KyFhY6U1wMkEpOIU3ecQi-SbLFBQ_hhXNFvegfpXrOqVPdZkwT5_Do045HTrpXHfbp7x_BzY5eGPA4Npa9FymEibsBPdKwr1SZoE1x80MF55edWzfJ5fGcHsNOEfjEH1kLCzuVwZi0ee5D-P32N7WtGo7jHcvQiudMZlXmTisCnDCnWBl5FbJXVNT7ne4OECLAwDk-WCGo_A64hfKN9jhJWrDBM5rNLtIcU2NCl34SWJXqghkKm1AO1eacOUFDAlGGSOLrpEHSPEM8IzhAZdtf4UOH1HjE2x44FFrKCH7LAwmQGf-4sqmuxK-Ns_U6Byh_20H6uY7OpUnP8Sww4nCHqpkVCV96rzw8y72BcgNmgEOBxChcOipkuXsntuQIViJLe7OUCaRZhixEcjtFAqFo0u_8MV-iKjUTcF8-44Qhah8_hVFQasYc6s1JpRgtWh_PGL9fQyThVA5Tt7wcwj1ht8jwCIM0K1R6RiYid7_DBXb43r8RD1z6UVn6bTqi8wD740Cm7XRBfFRS05TIze-2jjXymGvR19Z-WyrGaw4PtbdcrmIEIIxg49Gj0ME283LW8Twm_A_IY3q96fbhtsqMRStIa7J_75sWqv_PI5L0ibfOe9l7Apjb72I8adurEVvKXbwH4enGQw7Gp3o-o-3SC9R0Pv83KlCYo5Eaqc7o5z8KbSXkWcvCHbq0cRK8B7Yo7tEfWD_RT0cNGz3oTtwHzoc8eLDvxdEp_Y_d9IUbagjh5Hvi8aBax3wbDRkERSD2y1oyA893dNiEbkNYoHzQT0OH-_kg2fXEqTj4NFWAMJJ_3bYrx_6uc6s_8ajg-X2Le1xOwRVmnMj8NoebNbec5IrltN3PH8AB_xM_Q9DPqw2')">
+            <div class="p-4 text-center">
+                <div class="text-emerald-400 font-medium mb-2 flex items-center justify-center gap-2">
+                    <span class="text-xl">📦</span> CONTAINER DIAGRAM
+                </div>
+                <img src="https://kroki.io/plantuml/svg/eNqNVk1v4zYQvedXTHNpAiT2pacAAdabZJO0TuJdORv0ZFASLTMriSpJ2esW_e99Q-ozG2MbBBA15Jt5M5x58gfrhHF1kR_9osokr1NJG-cqezGdGrGbZMpt6ri20iS6dLJ0k0QX0yoXJWPOrUtzFU-vfjtfsOn5YT4thHXSwLS6AkKoUppJxf6PfqXLy0uCda2y2gindMmWo_nsz6fn5Wr5tFhdP708npy2lpf75d1qfnN783gN45FTLpfUeaVUicyIgtba0NXyYRZFBBYOr0UbbCGN1aWwPk54OdnoQuodHJzR8V27PsbLwuhKGrcnb6Fc62-qzLz7v2qRq7WSKdlKJgov1tnj09Zlb4SbqHthp0zXiMTBCf4ro9fSWmQuctLrtTQcAdXdqkQOHIq0UCXQM37CE6qlA8cmQZJFleu9lFSIUmTeyx6FL0iUKfF9DbxltfTMbvnJXp5LUbuNNupvZLSTsVVO0lbhgSinbfGi4PCjrstUmL2vYbCtWttJ4nDflvMcX8DxKf1zRPjrrusEcVaiqnD2RcY0q6pcJb4JmNEXiRrRlL7WcvJq2RIhp1yeVyKTJPrDoVhIV-S5z5MU-tKsBepHoYN5t6pjIIgTO6NU2E2shUlBlMvjq0uVKGU-oTuNjFKC50_KyFhY6U1wMkEpOIU3ecQi-SbLFBQ_hhXNFvegfpXrOqVPdZkwT5_Do045HTrpXHfbp7x_BzY5eGPA4Npa9FymEibsBPdKwr1SZoE1x80MF55edWzfJ5fGcHsNOEfjEH1kLCzuVwZi0ee5D-P32N7WtGo7jHcvQiudMZlXmTisCnDCnWBl5FbJXVNT7ne4OECLAwDk-WCGo_A64hfKN9jhJWrDBM5rNLtIcU2NCl34SWJXqghkKm1AO1eacOUFDAlGGSOLrpEHSPEM8IzhAZdtf4UOH1HjE2x44FFrKCH7LAwmQGf-4sqmuxK-Ns_U6Byh_20H6uY7OpUnP8Sww4nCHqpkVCV96rzw8y72BcgNmgEOBxChcOipkuXsntuQIViJLe7OUCaRZhixEcjtFAqFo0u_8MV-iKjUTcF8-44Qhah8_hVFQasYc6s1JpRgtWh_PGL9fQyThVA5Tt7wcwj1ht8jwCIM0K1R6RiYid7_DBXb43r8RD1z6UVn6bTqi8wD740Cm7XRBfFRS05TIze-2jjXymGvR19Z-WyrGaw4PtbdcrmIEIIxg49Gj0ME283LW8Twm_A_IY3q96fbhtsqMRStIa7J_75sWqv_PI5L0ibfOe9l7Apjb72I8adurEVvKXbwH4enGQw7Gp3o-o-3SC9R0Pv83KlCYo5Eaqc7o5z8KbSXkWcvCHbq0cRK8B7Yo7tEfWD_RT0cNGz3oTtwHzoc8eLDvxdEp_Y_d9IUbagjh5Hvi8aBax3wbDRkERSD2y1oyA893dNiEbkNYoHzQT0OH-_kg2fXEqTj4NFWAMJJ_3bYrx_6uc6s_8ajg-X2Le1xOwRVmnMj8NoebNbec5IrltN3PH8AB_xM_Q9DPqw2"
+                     alt="Container Diagram" class="w-full h-auto rounded-t-xl">
+                <p class="text-sm text-slate-400 mt-3">Containers: Web App, Backend Functions, Firebase services, externals</p>
+            </div>
+        </div>
+
+        <!-- Component -->
+        <div class="diagram-card bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-700 hover:border-emerald-500/50 transition-all" onclick="openModal('https://kroki.io/plantuml/svg/eNqdWVtv2zgWfs-v4OZhNgGS-mWfFigwrpM2xcRNJk632CeDlmibE0nUkFQ8xmL--368SKIkKlZaBLVI8Tvn8NxJ_ao0lbrKs7N_8CLJqpSRvdal-vdsJunhw47rfbWpFJOJKDQr9IdE5LMyo4XBXCudZnwzW_zr-tFMfV_ez3KqNJOYWi9EXorCYEpD_-yf5OPHj2Qhii3fVZJqLgozc3Y__-_D9-f188Pj-ubhx7eLy3rmx9fnu_X97ZfbbzeYPNNcZ4w0VEnK6U7SnGyFJIvn5Xy1IpBCY5iTa_KJJi-sSMn88SuZkUUmqpR8rorEsFW1MI9MKlFQZeVwg4u9yJk4FExekfO7-vkcg0cpSib1kdgZkgnxwoudZf9nRTO-5SwlqmQJx0BpdX5Zk2wnQWbVDAxRqENLmmgQwV8pxZYpBRFpRsR2y6ThAO2_8oQFBGma8wLoufkFJWhTOBlrBbC8zMSRMWBaxWvKIbnbbTO8OLDNmpYl0D_YhszLMuOJtY4h-MQg3Ow_FfvwhzLjz9L6QUposO4yoLZxesfSNy1gaH0TaU32U6WAVgpa3fGEZPQInTei3_4FlzIqWR3hXLnbgHte490FFMBLZnRrH6wi6DE3TgKNJkajxQ7kAgjlWPRQsmL-1QhoIHgKNB2s1QeecYEVz_bBrF0tV2RHNTvQY3ctyynPsODW_JKVo3feTKQs469M9kDpxmiWS7ahihHzoGBP5nS0-v2epFRT864LM4vojoXYlZuyluKIFr-kt_dK70PQHGOrAPxCZ61VvfprQzahp8gnURUplcfQEvVc7QLrpFl_yhsC0ueX5H9nBP-aqQta8rVXtpESBL64EQg9iUq78Lz9q4TelHcoO6-IZH9WUKYiWylyAk83fku0MD8IZ8lBiOxpkWaIC-zYMLb_uZ13NUJ-IcgBW-hVkaVIK-jXbN8sb_ZudLvO7cuBRof4ZrPdDZt8u_a-CCrf8Ri6ksfWb0pHk-S0gKmN11_BkbWGz0PxUArSCCucVw95WYG9BrzE5M4Nu7w67kI4ssDOJfErIkWHfZwPX9NXuLF0kTa3z_Fd-bAMWNgk6-Bkx5Bmag81PP7uW20lTIKFtheuZo0aS9mFrblGgCNW2iBXBVb6hGF8P_YNqixPjOUXT99vrghiI7eRBObd7XSZbCVH1KiAD2QrmA-bKLvPDjIzFRvJW5GC6YOQL6csZEoSfCZgde9m4mwWGUVeNUVPkYv5K9cC7cAxY5en-CR7qsP9YBjnsEQ4g1BAj8AVtChRGomF3RY7lI0xP1hS-cI0mpWEjbpA3q5p_WAIHHEBn16C3Ty5mfiGEP1_wHQzDyOJZM69EW-ntIYan7KA0bMZx9m4Vz4tmBQgJJoCVK5TPLBe28xDZbIPeK3sBOLis10Q5-oWOYvYDX1hIhM-8wWxHPcJmjFjkNAv_NQIt2TP8Gy80_Da-GbsxAZL1xUEXOo-Ic7EthPdXGcCl9sWzdUN11lE_e-J2hwMvS2bIB91RMleOTu0PvgGeMwZaS98HYn41p4sO2WVJz2rE8prM1XAIxAuniV8Jm3BaJZZBSjaIGSPZNwnUq5KFPGA2Y2biXOqX6IJEFnVhBVT8K03y0XTMy_Qc9W01dBCpV_X2iiOHDFPIXSz3zCffwvnRxJhlWl-jbyJzJ-RDiFSd5zoSBHpldpfxssv2ucjKlDIeV7Pxbl-LXzX3WBdWAuxgwO34FOxvWMiYBpmhfhmadmNOOATkcJDr3Dkw3EVrQyBTZNqzKy9UsNsSkI3Kpty47PUwjfZ93wjYeFZGB40u9Y8R_GxRcjEEauLzd91Y_zEnAhqz3FiJv74ZNrLsEk1joSV7Tmr288u6Qu8zQDqZtUIcPf8_LhqW_Aep5A8uDm5VcOpw6DXTPYaY8MLbAaoXls4FRU0eRMhvS5qImrYFk0EDpucicBe1zIRFWkQpgH75X6qXkYq-NRNDsvwROSwsk7VEP05e0Sr0UTssLJMBI7l8KnhEUnCE6HdJBoH-Vxh8_a1K1LdxNEkiIFbvl2cwIpuwBIniUOH6Vwdi8SLO_CAiTQ9bkCvG3CRTI7Dr7IHwyZFd6qWudVxlAYx369IOCMlQkjUGKjbCrJq5RgJqS4N1xgrsjmSurr1yAxDa0w_K5PZoOacF6m5lejppR8w0UCoabgmzyqpPWf2CHYz8BvkmiPs2_QG6n6DpF97iuQgYKMkb12rBwH9-tM-OswEdyKDXLVTkrSyV7AhQW_UWGU2xTh6WWnjuVNS_SXc0vbcyg6Du7fOfYu55CWrm9_8JroF3d4dmjsFYm6naXO52l4JjgDb20N_FxO0_3F8UN3t9ekXdxMD6XluNhH2LUPHeoegAw96B7abNiwQzVyqZgfJjaguWbAx-KCxeAfrQVZ9B7ZX738e2Zr1sTn2t-aJKWyQmN6zZfrThoqF8Dvgg8h9BzZShy36h3MR9lrXowh2JGs33whcXsNprB8NI8D6g4HD2dEgkAZpq_ng8eg-bzDVKaMhNrLXBn3xUGr7remS2CK4RQEs7BWo-eAwgdKOtpK_9rn7BHkDHSY6PBw1Wr0wWV_WR63L4UmpDl9_FpNBII-Yp4G2ceAFsHfkVZkJQ8NSipA4-xWbqfLs__L9xwg')">
+            <div class="p-4 text-center">
+                <div class="text-emerald-400 font-medium mb-2 flex items-center justify-center gap-2">
+                    <span class="text-xl">🔧</span> COMPONENT DIAGRAM
+                </div>
+                <img src="https://kroki.io/plantuml/svg/eNqdWVtv2zgWfs-v4OZhNgGS-mWfFigwrpM2xcRNJk632CeDlmibE0nUkFQ8xmL--368SKIkKlZaBLVI8Tvn8NxJ_ao0lbrKs7N_8CLJqpSRvdal-vdsJunhw47rfbWpFJOJKDQr9IdE5LMyo4XBXCudZnwzW_zr-tFMfV_ez3KqNJOYWi9EXorCYEpD_-yf5OPHj2Qhii3fVZJqLgozc3Y__-_D9-f188Pj-ubhx7eLy3rmx9fnu_X97ZfbbzeYPNNcZ4w0VEnK6U7SnGyFJIvn5Xy1IpBCY5iTa_KJJi-sSMn88SuZkUUmqpR8rorEsFW1MI9MKlFQZeVwg4u9yJk4FExekfO7-vkcg0cpSib1kdgZkgnxwoudZf9nRTO-5SwlqmQJx0BpdX5Zk2wnQWbVDAxRqENLmmgQwV8pxZYpBRFpRsR2y6ThAO2_8oQFBGma8wLoufkFJWhTOBlrBbC8zMSRMWBaxWvKIbnbbTO8OLDNmpYl0D_YhszLMuOJtY4h-MQg3Ow_FfvwhzLjz9L6QUposO4yoLZxesfSNy1gaH0TaU32U6WAVgpa3fGEZPQInTei3_4FlzIqWR3hXLnbgHte490FFMBLZnRrH6wi6DE3TgKNJkajxQ7kAgjlWPRQsmL-1QhoIHgKNB2s1QeecYEVz_bBrF0tV2RHNTvQY3ctyynPsODW_JKVo3feTKQs469M9kDpxmiWS7ahihHzoGBP5nS0-v2epFRT864LM4vojoXYlZuyluKIFr-kt_dK70PQHGOrAPxCZ61VvfprQzahp8gnURUplcfQEvVc7QLrpFl_yhsC0ueX5H9nBP-aqQta8rVXtpESBL64EQg9iUq78Lz9q4TelHcoO6-IZH9WUKYiWylyAk83fku0MD8IZ8lBiOxpkWaIC-zYMLb_uZ13NUJ-IcgBW-hVkaVIK-jXbN8sb_ZudLvO7cuBRof4ZrPdDZt8u_a-CCrf8Ri6ksfWb0pHk-S0gKmN11_BkbWGz0PxUArSCCucVw95WYG9BrzE5M4Nu7w67kI4ssDOJfErIkWHfZwPX9NXuLF0kTa3z_Fd-bAMWNgk6-Bkx5Bmag81PP7uW20lTIKFtheuZo0aS9mFrblGgCNW2iBXBVb6hGF8P_YNqixPjOUXT99vrghiI7eRBObd7XSZbCVH1KiAD2QrmA-bKLvPDjIzFRvJW5GC6YOQL6csZEoSfCZgde9m4mwWGUVeNUVPkYv5K9cC7cAxY5en-CR7qsP9YBjnsEQ4g1BAj8AVtChRGomF3RY7lI0xP1hS-cI0mpWEjbpA3q5p_WAIHHEBn16C3Ty5mfiGEP1_wHQzDyOJZM69EW-ntIYan7KA0bMZx9m4Vz4tmBQgJJoCVK5TPLBe28xDZbIPeK3sBOLis10Q5-oWOYvYDX1hIhM-8wWxHPcJmjFjkNAv_NQIt2TP8Gy80_Da-GbsxAZL1xUEXOo-Ic7EthPdXGcCl9sWzdUN11lE_e-J2hwMvS2bIB91RMleOTu0PvgGeMwZaS98HYn41p4sO2WVJz2rE8prM1XAIxAuniV8Jm3BaJZZBSjaIGSPZNwnUq5KFPGA2Y2biXOqX6IJEFnVhBVT8K03y0XTMy_Qc9W01dBCpV_X2iiOHDFPIXSz3zCffwvnRxJhlWl-jbyJzJ-RDiFSd5zoSBHpldpfxssv2ucjKlDIeV7Pxbl-LXzX3WBdWAuxgwO34FOxvWMiYBpmhfhmadmNOOATkcJDr3Dkw3EVrQyBTZNqzKy9UsNsSkI3Kpty47PUwjfZ93wjYeFZGB40u9Y8R_GxRcjEEauLzd91Y_zEnAhqz3FiJv74ZNrLsEk1joSV7Tmr288u6Qu8zQDqZtUIcPf8_LhqW_Aep5A8uDm5VcOpw6DXTPYaY8MLbAaoXls4FRU0eRMhvS5qImrYFk0EDpucicBe1zIRFWkQpgH75X6qXkYq-NRNDsvwROSwsk7VEP05e0Sr0UTssLJMBI7l8KnhEUnCE6HdJBoH-Vxh8_a1K1LdxNEkiIFbvl2cwIpuwBIniUOH6Vwdi8SLO_CAiTQ9bkCvG3CRTI7Dr7IHwyZFd6qWudVxlAYx369IOCMlQkjUGKjbCrJq5RgJqS4N1xgrsjmSurr1yAxDa0w_K5PZoOacF6m5lejppR8w0UCoabgmzyqpPWf2CHYz8BvkmiPs2_QG6n6DpF97iuQgYKMkb12rBwH9-tM-OswEdyKDXLVTkrSyV7AhQW_UWGU2xTh6WWnjuVNS_SXc0vbcyg6Du7fOfYu55CWrm9_8JroF3d4dmjsFYm6naXO52l4JjgDb20N_FxO0_3F8UN3t9ekXdxMD6XluNhH2LUPHeoegAw96B7abNiwQzVyqZgfJjaguWbAx-KCxeAfrQVZ9B7ZX738e2Zr1sTn2t-aJKWyQmN6zZfrThoqF8Dvgg8h9BzZShy36h3MR9lrXowh2JGs33whcXsNprB8NI8D6g4HD2dEgkAZpq_ng8eg-bzDVKaMhNrLXBn3xUGr7remS2CK4RQEs7BWo-eAwgdKOtpK_9rn7BHkDHSY6PBw1Wr0wWV_WR63L4UmpDl9_FpNBII-Yp4G2ceAFsHfkVZkJQ8NSipA4-xWbqfLs__L9xwg"
+                     alt="Component Diagram" class="w-full h-auto rounded-t-xl">
+                <p class="text-sm text-slate-400 mt-3">Backend modules, services and relationships</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-4xl font-bold mt-20 mb-6">2. Epic — Story Map</h2>
+    <div class="overflow-x-auto">
+        <table>
+            <thead>
+            <tr class="bg-slate-800">
+                <th>Epic (Module)</th>
+                <th>Key User Stories</th>
+                <th>Priority (MVP)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>Authentication & Profiles</strong></td>
+                <td>Registration / login (Firebase + roles), profile + AI avatar (OpenAI), settings</td>
+                <td class="positive">High</td>
+            </tr>
+            <tr>
+                <td><strong>Marketplace (Requests/Trades)</strong></td>
+                <td>Create project request (homeowner), browse/filter/bid (specialist), portfolio (storage)</td>
+                <td class="positive">High</td>
+            </tr>
+            <tr>
+                <td><strong>Search & Filter + Calendar</strong></td>
+                <td>Geo-search + distance, booking + reminders</td>
+                <td class="positive">High</td>
+            </tr>
+            <tr>
+                <td><strong>Payments & Disputes</strong></td>
+                <td>Stripe + escrow/commission, history, Dispute Service</td>
+                <td class="positive">High</td>
+            </tr>
+            <tr>
+                <td><strong>Chat & Real-time</strong></td>
+                <td>Messaging (Chat Engine + Firestore realtime)</td>
+                <td class="positive">High</td>
+            </tr>
+            <tr>
+                <td><strong>Ratings & Moderation</strong></td>
+                <td>Reviews, moderation queue, verification</td>
+                <td class="positive">High</td>
+            </tr>
+            <tr>
+                <td><strong>Social & Notifications</strong></td>
+                <td>Blog/listings, connections, multi-channel notifications</td>
+                <td>Medium</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="mt-4 text-slate-400">~40–45 stories for MVP (3–5 months development).</p>
+
+    <!-- Rest of the document remains unchanged (Cost Breakdown, Team, Risk, ROI) -->
+    <h2 class="text-4xl font-bold mt-20 mb-6">3. Cost Breakdown Structure (MVP Launch + 6 Months, US)</h2>
+    <p class="mb-6">Total budget: <strong>$180,000 – $250,000</strong> (US dev/marketing rates higher, Firebase remains cost-effective).</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+            <ul class="space-y-4">
+                <li><strong>Development (55–60%)</strong> — $110–150k<br>Frontend (React), Backend (Node Functions), Integrations (Stripe/OpenAI/Twilio/Maps)</li>
+                <li><strong>Marketing & Acquisition (20–25%)</strong> — $40–60k<br>SEO/SEM, ads (Google/FB), influencer outreach for specialists</li>
+                <li><strong>Infrastructure & Legal (10–15%)</strong> — $20–35k<br>Firebase, domain, compliance (CCPA, payments)</li>
+                <li><strong>QA / Ops / Contingency</strong> — $10–20k</li>
+            </ul>
+        </div>
+        <div>
+            <canvas id="costChart" class="max-h-80"></canvas>
+        </div>
+    </div>
+
+    <h2 class="text-4xl font-bold mt-20 mb-6">4. Minimum Team at Launch and During Operations + Maintenance</h2>
+    <p class="mb-6">Serverless architecture (Firebase Functions + Hosting) enables a very lean team. Below is a realistic minimum for a US seed-stage startup in 2026 (home-services marketplace).</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+            <h3 class="text-2xl font-bold mb-4">At Launch (MVP Development, 3–6 Months)</h3>
+            <table>
+                <thead>
+                <tr class="bg-slate-800">
+                    <th>Role</th>
+                    <th>Count</th>
+                    <th>Employment Type</th>
+                    <th>Responsibilities</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Founder / CEO</td><td>1</td><td>Full-time</td><td>Vision, fundraising, partnerships, growth strategy</td></tr>
+                <tr><td>Technical Founder / Lead Full-Stack Engineer</td><td>1</td><td>Full-time</td><td>Architecture, Firebase setup, Node.js Functions, integrations</td></tr>
+                <tr><td>Frontend Developer (React)</td><td>1</td><td>Full-time or strong contractor</td><td>Web App, Firebase SDK, UI/UX</td></tr>
+                <tr><td>Product / Growth Marketer</td><td>1</td><td>Full-time or part-time</td><td>User acquisition (specialists first), SEO/SEM, content</td></tr>
+                <tr><td>UI/UX Designer (part-time)</td><td>0.5–1</td><td>Contract / Freelance</td><td>Prototypes, design system, AI-avatar flows</td></tr>
+                <tr><td><strong>Total Minimum</strong></td><td><strong>4–5 people</strong></td><td>—</td><td>Can launch with 3 full-time + contractors</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3 class="text-2xl font-bold mb-4">Post-Launch (Operations + Maintenance, First 12–18 Months)</h3>
+            <table>
+                <thead>
+                <tr class="bg-slate-800">
+                    <th>Role</th>
+                    <th>Count</th>
+                    <th>When to Add</th>
+                    <th>Responsibilities</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Customer Support / Community Manager</td><td>1–2</td><td>After 5–10k users</td><td>Disputes, moderation, onboarding, chat support</td></tr>
+                <tr><td>Additional Developer (Full-Stack / Backend)</td><td>1</td><td>After MVP, at >50k users</td><td>Bug fixes, new features, scaling</td></tr>
+                <tr><td>Operations / Trust & Safety Lead</td><td>1</td><td>With first disputes</td><td>Verification, moderation, CCPA, fraud prevention</td></tr>
+                <tr><td>Part-time Accountant / Finance</td><td>0.5</td><td>After first revenue</td><td>Bookkeeping, Stripe reconciliation, taxes</td></tr>
+                <tr><td><strong>Total Post-Launch (Year 1–1.5)</strong></td><td><strong>7–10 people</strong></td><td>—</td><td>Lean ops with heavy automation</td></tr>
+                </tbody>
+            </table>
+            <p class="mt-4 text-slate-400">Post-launch maintenance: ~15–20% of dev budget annually. Can be outsourced on retainer (~$5–10k/month).</p>
+        </div>
+    </div>
+
+    <h2 class="text-4xl font-bold mt-20 mb-6">5. Risk Assessment Matrix</h2>
+    <div class="overflow-x-auto">
+        <table>
+            <thead>
+            <tr class="bg-slate-800">
+                <th>Risk</th>
+                <th>Likelihood</th>
+                <th>Impact</th>
+                <th>Level</th>
+                <th>Mitigation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>Chicken-egg problem</td><td>High</td><td>High</td><td class="negative">Critical</td><td>Free specialist onboarding + AI avatars + geo-focus on 1–2 states</td></tr>
+            <tr><td>Competition (Thumbtack, Angi, TaskRabbit, Handy)</td><td>High</td><td>High</td><td class="negative">Critical</td><td>AI + Calendar + Disputes + niche launch</td></tr>
+            <tr><td>Payment fraud / high chargebacks</td><td>Medium</td><td>High</td><td class="text-yellow-400">High</td><td>Escrow + Dispute Service + Stripe Radar</td></tr>
+            <tr><td>Vendor lock-in / Firebase downtime</td><td>Medium</td><td>High</td><td class="text-yellow-400">High</td><td>Multi-region + fallback channels</td></tr>
+            <tr><td>Regulatory (CCPA, labor laws, licensing)</td><td>Medium</td><td>High</td><td class="text-yellow-400">High</td><td>Legal review + compliance in moderation</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="text-4xl font-bold mt-20 mb-6">6. ROI Projection (5 Years, US Market, Conservative)</h2>
+    <p class="mb-6">Assumptions (2026–2030):</p>
+    <ul class="list-disc pl-6 mb-8 space-y-2">
+        <li>Revenue model: 10% commission on completed jobs (Stripe)</li>
+        <li>Avg job value: $450 (Y1) → $550 (Y5)</li>
+        <li>Seed investment: $500k ($200k dev/marketing + $300k ops/growth)</li>
+        <li>Growth: from 20k → 800k active users (realistic for niche US entry)</li>
+        <li>CAC ~$25–40, LTV >$150 with repeat jobs</li>
+    </ul>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+            <canvas id="roiChart" class="max-h-80"></canvas>
+        </div>
+        <div class="overflow-x-auto">
+            <table>
+                <thead>
+                <tr class="bg-slate-800">
+                    <th>Year</th>
+                    <th>Active Users</th>
+                    <th>Transactions</th>
+                    <th>Gross Volume</th>
+                    <th>Revenue (10%)</th>
+                    <th>OpEx</th>
+                    <th>Net Profit</th>
+                    <th>Cumulative</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>2026 (Y1)</td><td>25,000</td><td>8,000</td><td>$3.6M</td><td>$360k</td><td>$550k</td><td class="negative">–$190k</td><td class="negative">–$190k</td></tr>
+                <tr><td>2027 (Y2)</td><td>120,000</td><td>45,000</td><td>$20.25M</td><td>$2.0M</td><td>$900k</td><td class="positive">$1.1M</td><td class="positive">$910k</td></tr>
+                <tr><td>2028 (Y3)</td><td>350,000</td><td>140,000</td><td>$70M</td><td>$7.0M</td><td>$1.8M</td><td class="positive">$5.2M</td><td class="positive">$6.11M</td></tr>
+                <tr><td>2029 (Y4)</td><td>600,000</td><td>280,000</td><td>$154M</td><td>$15.4M</td><td>$3.2M</td><td class="positive">$12.2M</td><td class="positive">$18.31M</td></tr>
+                <tr><td>2030 (Y5)</td><td>900,000</td><td>480,000</td><td>$264M</td><td>$26.4M</td><td>$5.0M</td><td class="positive">$21.4M</td><td class="positive">$39.71M</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p class="mt-6 text-lg">
+        Break-even: late 2027 – early 2028.<br>
+        IRR ~42–50%.<br>
+        Exit potential Y5: 8–12x revenue → valuation $200–300M+ (comparable to Thumbtack trajectory).
+    </p>
+
+    <div class="mt-20 text-center text-slate-400">
+        <p>Data aligned with US market benchmarks (Thumbtack/TaskRabbit/Angi reports, 2025–2026).</p>
+        <p class="mt-2">Ready for detailed Excel model / architecture demo / team hiring plan.</p>
+    </div>
+</div>
+<!-- Modal -->
+<div id="modal" onclick="closeModal(event)">
+    <div id="modal-close" onclick="closeModal()">×</div>
+    <img id="modal-img" src="" alt="Enlarged Diagram">
+</div>
+
+<script>
+    // Modal functions
+    function openModal(src) {
+        document.getElementById('modal-img').src = src;
+        document.getElementById('modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e) {
+        if (e && e.target.id === 'modal' || e.target.id === 'modal-close') {
+            document.getElementById('modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Close modal with Esc key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // Charts (как раньше)
+    new Chart(document.getElementById('costChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Development', 'Marketing', 'Infra+Legal', 'QA+Contingency'],
+            datasets: [{ data: [57, 23, 13, 7], backgroundColor: ['#3b82f6','#8b5cf6','#fbbf24','#10b981'] }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#e2e8f0' } } } }
+    });
+
+    new Chart(document.getElementById('roiChart'), {
+        type: 'line',
+        data: {
+            labels: ['2026', '2027', '2028', '2029', '2030'],
+            datasets: [
+                { label: 'Revenue ($M)', data: [0.36, 2.0, 7.0, 15.4, 26.4], borderColor: '#10b981', tension: 0.3 },
+                { label: 'Net Profit ($M)', data: [-0.19, 1.1, 5.2, 12.2, 21.4], borderColor: '#fbbf24', tension: 0.3 }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } },
+            plugins: { legend: { labels: { color: '#e2e8f0' } } }
+        }
+    });
+</script>
+
+</body>
+</html>
